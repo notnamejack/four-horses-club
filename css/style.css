@@ -7,6 +7,7 @@
     --color-btn-hover: #FBCE51;
     --color-btn-disabled: #D6D6D6;
     --color-link: #3057A2;
+    --color-border: #D0D0D0;
 }
 
 
@@ -20,7 +21,7 @@ p, span {
     font-family: 'Golos Text', sans-serif;
 }
 
-h1, h2 {
+h1, h2, h3 {
     font-family: 'Merriweather', serif;
 }
 
@@ -150,6 +151,10 @@ main {
     padding: 0 72px;
     max-width: 1366px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 64px;
 }
 
 .event__inner {
@@ -189,6 +194,120 @@ main {
     height: 100%;
     object-fit: cover;
     border-radius: 100%;
+}
+
+.event__info {
+    display: flex;
+    align-items: flex-start;
+    gap: 44px;
+    width: 100%;
+}
+
+.event__image {
+    transform: scale(1.1);
+}
+
+.event__info-item { 
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    width: 100%;
+    max-width: 704px;
+}
+
+.event__info-item-title h3 {
+    font-size: 36px;
+    line-height: 135%;
+    font-weight: 400;
+    color: var(--color-text);
+    text-transform: uppercase;
+}
+
+.event__info-item-title h3 strong {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.event__info-schedule {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 48px;
+    width: 100%;
+}
+
+.event__info-schedule-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    list-style-type: none; 
+    width: 100%;
+    padding: 0;
+}
+.event__info-schedule-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.event__info-schedule-item:not(:last-child) {
+    border-bottom: 2px solid var(--color-border);
+}
+
+.event__info-schedule-item span {
+    display: inline-block;
+    padding: 16px 0;
+    font-size: 20px;
+    line-height: 120%;
+    font-weight: 400;
+    color: var(--color-text);
+}
+
+.event__info-schedule-item:first-child span {
+    padding-top: 0;
+}
+
+.event__info-schedule-item:last-child span {
+    padding-bottom: 0;
+}
+
+.event__info-schedule-item .value-container{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.event__info-schedule-item .description {
+    border-right: 2px solid var(--color-border);
+    opacity: .7;
+    width: 306px;
+}
+
+.event__info-schedule-item  .value {
+    font-weight: 600;
+}
+
+.event__info-schedule-item  .value.sale {
+    position: relative;
+}
+
+.event__info-schedule-item  .value.sale::before {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-primary);
+}
+
+.event__info-link{
+    font-size: 20px;
+    line-height: 120%;
+    font-weight: 400;
+    color: var(--color-link);
 }
 
 /* footer */
