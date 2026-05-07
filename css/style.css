@@ -20,7 +20,7 @@ p, span {
     font-family: 'Golos Text', sans-serif;
 }
 
-h1 {
+h1, h2 {
     font-family: 'Merriweather', serif;
 }
 
@@ -54,10 +54,11 @@ main {
 .hero {
     position: relative;
     margin: 0 auto;
+    margin-bottom: 140px;
     padding: 124px 72px 132px;
     max-width: 1366px;
     width: 100%;
-    height: 70vh;
+    height: 66vh;
 }
 
 .hero .background {
@@ -70,7 +71,7 @@ main {
     height: 100%;
     background-image: url('../img/hero-big.jpg');
     background-size: cover;
-    background-position: center;
+    background-position: top;
     background-repeat: no-repeat;
     z-index: -1;
 }
@@ -139,6 +140,55 @@ main {
 
 .hero__buttons .btn.btn-secondary span{
     color: var(--color-btn-background);
+}
+
+/* event */
+
+.event {
+    margin: 0 auto;
+    margin-bottom: 200px;
+    padding: 0 72px;
+    max-width: 1366px;
+    width: 100%;
+}
+
+.event__inner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 64px;
+}
+
+.event__title {
+    width: 100%;
+    max-width: 764px;
+}
+
+.event__title h2 {
+    display: inline-block;
+    font-size: 36px;
+    line-height: 135%;
+    font-weight: 400;
+    color: var(--color-text);
+    text-transform: uppercase;
+}
+
+.event__title h2 strong {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.event__inner .image {
+    width: 394px;
+    height: 250px;
+    border-radius: 100%;
+}
+
+.event__inner .image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 100%;
 }
 
 /* footer */
