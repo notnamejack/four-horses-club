@@ -370,33 +370,33 @@ main {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-areas:
-      "w12 w12 s3"
-      "s4  s5  s3"
-      "s6 w7 w7";
+    "w12 w12 s3"
+    "s4  s5  s3"
+    "s6 w7 w7";
     gap: 20px;
-  }
+}
   
-  .roadmap__card--w12 { grid-area: w12; }
-  .roadmap__card--s3  { grid-area: s3; }
-  .roadmap__card--s4  { grid-area: s4; }
-  .roadmap__card--s5  { grid-area: s5; }
-  .roadmap__card--s6 { grid-area: s6; }
-  .roadmap__card--w7 { grid-area: w7; }
- 
-  
-  .roadmap__card--wide {
+.roadmap__card--w12 { grid-area: w12; }
+.roadmap__card--s3  { grid-area: s3; }
+.roadmap__card--s4  { grid-area: s4; }
+.roadmap__card--s5  { grid-area: s5; }
+.roadmap__card--s6 { grid-area: s6; }
+.roadmap__card--w7 { grid-area: w7; }
+
+
+.roadmap__card--wide {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
-  }
+}
 
-  .roadmap__card--s5 .roadmap__step{
+.roadmap__card--s5 .roadmap__step{
     padding-right: 40px;
-  }
-  .roadmap__card--w7 .roadmap__step{
+}
+.roadmap__card--w7 .roadmap__step{
     padding-right: 290px;
-  }
-  .roadmap__step {
+}
+.roadmap__step {
     display: grid;
     grid-template-columns: 36px 1fr;
     gap: 16px;
@@ -407,16 +407,16 @@ main {
     background-position: center;
     background-repeat: no-repeat;
     height: 100%;
-  }
+}
 
-  .roadmap__step p {
+.roadmap__step p {
     font-size: 20px;
     line-height: 120%;
     font-weight: 500;
     color: var(--color-text);
-  }
+}
 
-  .roadmap__step::before {
+.roadmap__step::before {
     content: attr(data-n);
     width: 36px;
     height: 36px;
@@ -431,13 +431,146 @@ main {
     font-weight: 600;
     text-align: center;
     padding: 8px 10px;
-  }
+}
 
-  .roadmap__image {
+.roadmap__image {
     position: absolute;
     bottom: 0;
     right: -62px;
-  }
+}
+
+/* participants */
+
+.participants {
+    margin: 0 auto;
+    margin-bottom: 200px;
+    padding: 0 72px;
+    max-width: 1366px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+}
+
+.participants__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.participants__title h2 {
+    font-size: 54px;
+    line-height: 120%;
+    font-weight: 400;
+    color: var(--color-text);
+    text-transform: uppercase;
+}
+
+.participants__scroll {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.participants__scroll .btn.btn-scroll { 
+    padding: 0;
+    padding-left: 3px;
+    width: 44px;
+    height: 44px;
+    background-color: var(--color-text);
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.participants__scroll .btn.btn-scroll svg {
+    width: 16px;
+}
+
+.participants__scroll .btn.btn-scroll.btn-scroll-left {
+    transform: rotate(180deg);
+}
+
+.participants__progress span{
+    font-size: 16px;
+    line-height: 120%;
+    font-weight: 400;
+    color: var(--color-text);
+}
+
+
+.participants__list {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    overflow-x: scroll;
+    width: 100%;
+}
+
+.participants__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    width: 394px;
+}
+
+.participants__card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.participants__card-name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.participants__card-name p {
+    font-size: 24px;
+    line-height: 120%;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.participants__card-name p.description {
+    font-size: 20px;
+    font-weight: 400;
+    opacity: .6;
+}
+
+.participants__card-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.participants__card-content .btn { 
+    padding: 12px;
+    background-color: transparent;
+    border: 1px solid var(--color-link);
+    outline-style: none;
+    border-radius: 62px;
+    height: 35px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.participants__card-content .btn span {
+    font-size: 16px;
+    line-height: 120%;
+    font-weight: 500;
+    color: var(--color-link);
+}
 
 /* footer */
 
