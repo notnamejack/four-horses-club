@@ -88,7 +88,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 542px;
+    max-width: 542px;
     margin-bottom: 24px;
     /* max-width: 1366px; */
 }
@@ -127,6 +127,8 @@ main {
 .hero__buttons .btn {
     width: 263px;
     height: 72px;
+    outline: none;
+    border: none;
     border-radius: 66px;
     padding: 10px 49px;
     font-size: 16px;
@@ -681,4 +683,82 @@ footer .desc {
     footer {
         max-width: 1366px;
     }
+}
+
+
+@media (max-width: 768px) {
+    header {
+        padding: 18px 20px 0;
+    }
+    .header__logo {
+        height: 32px;
+    }
+    .header__logo img {
+        height: 100%;
+    }
+    main {
+        max-width: 768px;
+    }
+    .hero__container {
+        padding: 0;
+    }
+    .hero {
+        height: 812px;
+        padding: 90px 20px 291px;
+    }
+    .hero .background {
+        background-image: url('../img/hero-mobile.jpg');
+        background-position: bottom;
+    }
+
+    .hero__title h1 {
+        font-size: 36px;        
+    }
+
+    .hero__description {
+        text-align: left;
+        margin-bottom: 32px;
+    }
+
+    .hero__buttons {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .hero__buttons .btn {
+        width: 100%;
+        padding: 10px 43px;
+        height: 47px;
+    }
+
+    .hero__buttons .btn span {
+        display: inline;
+        font-size: 16px;
+    }
+
+    .hero__buttons .btn.btn-secondary {
+        background-color: var(--color-bg);
+        border: none;
+    }
+
+    .hero .running_line {
+        bottom: 0;
+    }
+    .running_line {
+        padding: 10px 0;
+    }
+    .running_line__content p {
+        font-size: 16px;
+    }
+
+    footer {
+        padding: 78px 20px 60px;
+    }
+    footer .footer__container{
+        padding: 0;
+    }
+    footer .running_line {
+         top: 0;
+    }
+
 }
