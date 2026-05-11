@@ -451,6 +451,10 @@ main {
     right: -62px;
 }
 
+.participants__scroll.roadmap__scroll {
+    display: none;
+}
+
 /* participants */
 
 .participants {
@@ -852,6 +856,7 @@ footer .desc {
 
     .roadmap {
         padding: 0 20px;
+        gap: 148px;
     }
 
     .roadmap__title {
@@ -871,5 +876,103 @@ footer .desc {
         position: relative;
         top: 0;
         right: 0;
+    }
+    .roadmap__items { overflow: visible; }   /* самолёт не режем */
+    .roadmap__list  { overflow: hidden; } 
+    
+    .roadmap__list {
+        display: flex;
+        gap: 20px;
+        transition: transform 450ms ease;
+        will-change: transform;
+        /* важно: убиваем grid-раскладку десктопа */
+        grid-template-columns: unset;
+        grid-template-areas: unset;
+    }
+    .roadmap__card {
+        display: flex;
+        flex-direction: column;
+        gap: 0; /* как на макете: “плашки” одна под другой */
+        width: 335px;
+        height: 300px;
+    }
+      /* wide на мобилке: не 2 колонки */
+    .roadmap__card--wide {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .roadmap__card .roadmap__step:first-child {
+        padding: 62px 20px 0;
+    }
+    .roadmap__card .roadmap__card--wide:last-child {
+        padding: 0 20px;
+    }
+    .roadmap__card .roadmap__step p {
+        font-size: 18px;
+    }
+    .roadmap__card--w7 .roadmap__step,
+    .roadmap__card--s5 .roadmap__step {
+        padding-right: 20px;
+    }
+      /* самолёт больше не absolute справа */
+    .roadmap__image {
+        top: -128px;
+        left: 0;
+        right: auto;
+        bottom: auto;
+        z-index: 100;
+    }
+    .roadmap__image img {
+        max-width: 335px;
+        height: auto;
+        display: block;
+    }
+    .participants__scroll.roadmap__scroll {
+        display: flex;
+    }
+      /* контролы как на скрине */
+    .roadmap__scroll {
+        margin-top: 28px;
+        justify-content: center;
+        align-items: center;
+        gap: 14px;
+        width: 335px;
+    }
+    .roadmap__scroll .btn.btn-scroll {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border: none;
+    }
+    /* макет: назад — светлая, вперёд — тёмная */
+    .roadmap__scroll .roadmap__prev {
+        background-color: var(--color-btn-disabled, #d6d6d6);
+    }
+    .roadmap__scroll .roadmap__next {
+        background-color: var(--color-text, #313131);
+    }
+    .roadmap__scroll .btn.btn-scroll:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+    .roadmap__dots {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    .roadmap__dot {
+        width: 10px;
+        height: 10px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: var(--color-btn-disabled, #d6d6d6);
+        cursor: pointer;
+    }
+    .roadmap__dot.is-active {
+        background: var(--color-text, #313131);
     }
 }

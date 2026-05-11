@@ -144,3 +144,97 @@ document.addEventListener("DOMContentLoaded", () => {
     rebuildClones();
     startAuto();
   });
+
+function initRoadmapMobileSlider() {
+  if (!window.matchMedia("(max-width: 768px)").matches) return;
+
+  const track = document.querySelector(".roadmap__list");
+  if (!track) return;
+
+  const s4 = track.querySelector(".roadmap__card--s4");
+  const s5 = track.querySelector(".roadmap__card--s5");
+  if (s4 && s5 && !s4.dataset.merged) {
+    s4.dataset.merged = "1";
+    const step5 = s5.querySelector(".roadmap__step");
+    if (step5) s4.appendChild(step5);
+    s5.remove();
+  }
+
+  const slides = Array.from(track.querySelectorAll(".roadmap__card"));
+  if (slides.length <= 1) return;
+
+  const btnPrev = document.querySelector(".roadmap__prev");
+  const btnNext = document.querySelector(".roadmap__next");
+  const dotsRoot = document.querySelector(".roadmap__dots");
+  if (!btnPrev || !btnNext || !dotsRoot) return;
+
+  let dots = Array.from(dotsRoot.querySelectorAll(".roadmap__dot"));
+
+  // если в HTML не 5 точек — пересобрать под slides.length
+  if (dots.length !== slides.length) {
+    dotsRoot.innerHTML = "";
+    dots = slides.map((_, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "roadmap__dot" + (i === 0 ? " is-active" : "");
+      b.setAttribute("aria-label", `Слайд ${i + 1}`);
+      if (i === 0) b.setAttribute("aria-current", "true");
+      dotsRoot.appendChild(b);
+      return b;
+    });
+  }
+
+  const gap = (() => {
+    const cs = getComputedStyle(track);
+    const g = cs.gap || cs.columnGap || "0px";
+    const n = parseFloat(g);
+    return Number.isFinite(n) ? n : 0;
+  })();
+
+  const getSlideWidth = () => slides[0].getBoundingClientRect().width + gap;
+
+  let index = 0;
+
+  function syncDots() {
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("is-active", i === index);
+      if (i === index) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
+  }
+
+  function update() {
+    const w = getSlideWidth();
+    track.style.transform = `translateX(${-index * w}px)`;
+    btnPrev.disabled = index === 0;
+    btnNext.disabled = index === slides.length - 1;
+    syncDots();
+  }
+
+  btnPrev.addEventListener("click", () => {
+    index = Math.max(0, index - 1);
+    update();
+  });
+
+  btnNext.addEventListener("click", () => {
+    index = Math.min(slides.length - 1, index + 1);
+    update();
+  });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      index = i;
+      update();
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.matchMedia("(max-width: 768px)").matches) update();
+  });
+
+  update();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initRoadmapMobileSlider();
+});
