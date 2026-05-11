@@ -767,6 +767,7 @@ footer .desc {
     .event {
         padding: 0 20px;
         gap: 34px;
+        margin-bottom: 120px;
     }
 
     .event__title {
@@ -847,5 +848,28 @@ footer .desc {
     }
     .event__info-link {
         font-size: 18px;
+    }
+
+    .roadmap {
+        padding: 0 20px;
+    }
+
+    .roadmap__title {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .roadmap__title h2 {
+        font-size: 36px;
+        line-height: 110%;
+    }
+
+    .roadmap__title p {
+        position: relative;
+        top: 0;
+        right: 0;
     }
 }
