@@ -1,188 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const track = document.querySelector(".participants__list");
-    const btnPrev = document.querySelector(".btn-scroll-left");
-    const btnNext = document.querySelector(".btn-scroll-right");
-    const progressStrong = document.querySelector(".participants__progress strong");
-    const progressRoot = document.querySelector(".participants__progress span");
-  
-    if (!track || !btnPrev || !btnNext || !progressStrong) return;
-  
-    const originalItems = Array.from(track.children);
-    const total = originalItems.length;
-  
-    // gap между карточками (flex gap)
-    const gap = (() => {
-      const cs = getComputedStyle(track);
-      const g = cs.gap || cs.columnGap || "0px";
-      const n = parseFloat(g);
-      return Number.isFinite(n) ? n : 0;
-    })();
-  
-    const getCardWidth = () => {
-      const first = track.querySelector(".participants__card");
-      if (!first) return 0;
-      return first.getBoundingClientRect().width + gap;
-    };
-  
-    const getPerView = () => (window.innerWidth >= 1024 ? 3 : 1);
-  
-    let perView = getPerView();
-    let cloneCount = Math.min(perView, total);
-    let index = cloneCount; // текущий индекс в track с учётом клонов
-    let animating = false;
-  
-    function setProgress() {
-        const logicalLeft = ((index - cloneCount) % total + total) % total; // 0..total-1
-        const logicalRight = (logicalLeft + perView - 1) % total;           // последняя видимая
-        progressStrong.textContent = String(logicalRight + 1);
-    }
-  
-    function translateToIndex(animate = true) {
-      const cw = getCardWidth();
-      if (!cw) return;
-  
-      track.style.transition = animate ? "transform 450ms ease" : "none";
-      track.style.transform = `translateX(${-index * cw}px)`;
-      setProgress();
-    }
-  
-    function rebuildClones() {
-      // восстановить оригинал
-      track.innerHTML = "";
-      originalItems.forEach((el) => track.appendChild(el));
-  
-      perView = getPerView();
-      cloneCount = Math.min(perView, total);
-  
-      const itemsNow = Array.from(track.children);
-  
-      // клоны в начало (последние cloneCount)
-      const headClones = itemsNow.slice(-cloneCount).map((el) => el.cloneNode(true));
-      headClones.forEach((cl) => track.insertBefore(cl, track.firstChild));
-  
-      // клоны в конец (первые cloneCount)
-      const tailClones = itemsNow.slice(0, cloneCount).map((el) => el.cloneNode(true));
-      tailClones.forEach((cl) => track.appendChild(cl));
-  
-      index = cloneCount;
-      translateToIndex(false);
-    }
-  
-    function next() {
-      if (animating) return;
-      animating = true;
-      index += perView;
-      translateToIndex(true);
-    }
-  
-    function prev() {
-      if (animating) return;
-      animating = true;
-      index -= perView;
-      translateToIndex(true);
-    }
-  
-    track.addEventListener("transitionend", () => {
-      // после анимации, если мы попали в клон-зону — прыгаем без анимации
-      const maxIndex = total + cloneCount - 1;
-  
-      if (index > maxIndex) {
-        index = cloneCount; // на первый реальный
-        translateToIndex(false);
-      } else if (index < cloneCount) {
-        index = total + cloneCount - 1; // на последний реальный
-        translateToIndex(false);
-      }
-  
-      // re-enable
-      // (даже если был "без анимации" прыжок — это ок)
-      animating = false;
-    });
-  
-    // кнопки
-    btnNext.addEventListener("click", () => {
-      restartAuto();
-      next();
-    });
-  
-    btnPrev.addEventListener("click", () => {
-      restartAuto();
-      prev();
-    });
-  
-    // авто каждые 4 сек
-    let timer = null;
-    function startAuto() {
-      stopAuto();
-      timer = setInterval(next, 4000);
-    }
-    function stopAuto() {
-      if (timer) clearInterval(timer);
-      timer = null;
-    }
-    function restartAuto() {
-      startAuto();
-    }
-  
-    // пауза при наведении/фокусе (обычно ожидаемо)
-    track.addEventListener("mouseenter", stopAuto);
-    track.addEventListener("mouseleave", startAuto);
-    btnPrev.addEventListener("mouseenter", stopAuto);
-    btnPrev.addEventListener("mouseleave", startAuto);
-    btnNext.addEventListener("mouseenter", stopAuto);
-    btnNext.addEventListener("mouseleave", startAuto);
-  
-    // пересборка на ресайз (меняется perView => меняется cloneCount)
-    let resizeRaf = 0;
-    window.addEventListener("resize", () => {
-      cancelAnimationFrame(resizeRaf);
-      resizeRaf = requestAnimationFrame(() => {
-        rebuildClones();
-      });
-    });
-  
-    rebuildClones();
-    startAuto();
-  });
+  initParticipantsCarousel();
+  initRoadmapMobileSlider();
+  initReveal();
+  initSmoothAnchors();
+});
 
-function initRoadmapMobileSlider() {
-  if (!window.matchMedia("(max-width: 768px)").matches) return;
+function initParticipantsCarousel() {
+  const root = document.querySelector(".participants");
+  if (!root) return;
 
-  const track = document.querySelector(".roadmap__list");
-  if (!track) return;
+  const track = root.querySelector(".participants__list");
+  const btnPrev = root.querySelector(".participants__prev");
+  const btnNext = root.querySelector(".participants__next");
+  const progressStrong = root.querySelector(".participants__progress strong");
+  if (!track || !btnPrev || !btnNext || !progressStrong) return;
 
-  const s4 = track.querySelector(".roadmap__card--s4");
-  const s5 = track.querySelector(".roadmap__card--s5");
-  if (s4 && s5 && !s4.dataset.merged) {
-    s4.dataset.merged = "1";
-    const step5 = s5.querySelector(".roadmap__step");
-    if (step5) s4.appendChild(step5);
-    s5.remove();
-  }
-
-  const slides = Array.from(track.querySelectorAll(".roadmap__card"));
-  if (slides.length <= 1) return;
-
-  const btnPrev = document.querySelector(".roadmap__prev");
-  const btnNext = document.querySelector(".roadmap__next");
-  const dotsRoot = document.querySelector(".roadmap__dots");
-  if (!btnPrev || !btnNext || !dotsRoot) return;
-
-  let dots = Array.from(dotsRoot.querySelectorAll(".roadmap__dot"));
-
-  // если в HTML не 5 точек — пересобрать под slides.length
-  if (dots.length !== slides.length) {
-    dotsRoot.innerHTML = "";
-    dots = slides.map((_, i) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "roadmap__dot" + (i === 0 ? " is-active" : "");
-      b.setAttribute("aria-label", `Слайд ${i + 1}`);
-      if (i === 0) b.setAttribute("aria-current", "true");
-      dotsRoot.appendChild(b);
-      return b;
-    });
-  }
+  const originalItems = Array.from(track.children);
+  const total = originalItems.length;
+  if (!total) return;
 
   const gap = (() => {
     const cs = getComputedStyle(track);
@@ -191,50 +26,272 @@ function initRoadmapMobileSlider() {
     return Number.isFinite(n) ? n : 0;
   })();
 
-  const getSlideWidth = () => slides[0].getBoundingClientRect().width + gap;
+  const getCardWidth = () => {
+    const first = track.querySelector(".participants__card");
+    if (!first) return 0;
+    return first.getBoundingClientRect().width + gap;
+  };
 
+  const getPerView = () => (window.innerWidth >= 1024 ? 3 : 1);
+
+  let perView = getPerView();
+  let cloneCount = Math.min(perView, total);
+  let index = cloneCount;
+  let animating = false;
+
+  function setProgress() {
+    const logicalLeft = ((index - cloneCount) % total + total) % total;
+    // desktop (3 в ряд): номер правой видимой; mobile (1): текущий слайд
+    const shown = perView > 1
+      ? (logicalLeft + perView - 1) % total
+      : logicalLeft;
+    progressStrong.textContent = String(shown + 1);
+  }
+
+  function translateToIndex(animate = true) {
+    const cw = getCardWidth();
+    if (!cw) return;
+    track.style.transition = animate ? "transform 450ms ease" : "none";
+    track.style.transform = `translateX(${-index * cw}px)`;
+    setProgress();
+  }
+
+  function rebuildClones() {
+    track.innerHTML = "";
+    originalItems.forEach((el) => track.appendChild(el));
+
+    perView = getPerView();
+    cloneCount = Math.min(perView, total);
+
+    const itemsNow = Array.from(track.children);
+    const headClones = itemsNow.slice(-cloneCount).map((el) => el.cloneNode(true));
+    headClones.forEach((cl) => track.insertBefore(cl, track.firstChild));
+
+    const tailClones = itemsNow.slice(0, cloneCount).map((el) => el.cloneNode(true));
+    tailClones.forEach((cl) => track.appendChild(cl));
+
+    index = cloneCount;
+    translateToIndex(false);
+  }
+
+  function next() {
+    if (animating) return;
+    animating = true;
+    index += perView;
+    translateToIndex(true);
+  }
+
+  function prev() {
+    if (animating) return;
+    animating = true;
+    index -= perView;
+    translateToIndex(true);
+  }
+
+  track.addEventListener("transitionend", (e) => {
+    if (e.target !== track || e.propertyName !== "transform") return;
+
+    const maxIndex = total + cloneCount - perView;
+    if (index > maxIndex) {
+      index = cloneCount;
+      translateToIndex(false);
+    } else if (index < cloneCount) {
+      index = total + cloneCount - perView;
+      translateToIndex(false);
+    }
+    animating = false;
+  });
+
+  btnNext.addEventListener("click", () => {
+    restartAuto();
+    next();
+  });
+
+  btnPrev.addEventListener("click", () => {
+    restartAuto();
+    prev();
+  });
+
+  let timer = null;
+  function startAuto() {
+    stopAuto();
+    timer = setInterval(next, 4000);
+  }
+  function stopAuto() {
+    if (timer) clearInterval(timer);
+    timer = null;
+  }
+  function restartAuto() {
+    startAuto();
+  }
+
+  root.addEventListener("mouseenter", stopAuto);
+  root.addEventListener("mouseleave", startAuto);
+  root.addEventListener("focusin", stopAuto);
+  root.addEventListener("focusout", (e) => {
+    if (!root.contains(e.relatedTarget)) startAuto();
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopAuto();
+    else startAuto();
+  });
+
+  let resizeRaf = 0;
+  window.addEventListener("resize", () => {
+    cancelAnimationFrame(resizeRaf);
+    resizeRaf = requestAnimationFrame(() => {
+      rebuildClones();
+    });
+  });
+
+  rebuildClones();
+  startAuto();
+}
+
+function initRoadmapMobileSlider() {
+  const mq = window.matchMedia("(max-width: 768px)");
+  const track = document.querySelector(".roadmap__list");
+  if (!track) return;
+
+  const btnPrev = document.querySelector(".roadmap__prev");
+  const btnNext = document.querySelector(".roadmap__next");
+  const dotsRoot = document.querySelector(".roadmap__dots");
+  if (!btnPrev || !btnNext || !dotsRoot) return;
+
+  const originalHTML = track.innerHTML;
+  let slides = [];
+  let dots = [];
   let index = 0;
+  let bound = false;
+
+  function getGap() {
+    const cs = getComputedStyle(track);
+    const g = cs.gap || cs.columnGap || "0px";
+    const n = parseFloat(g);
+    return Number.isFinite(n) ? n : 0;
+  }
 
   function syncDots() {
     dots.forEach((dot, i) => {
-      dot.classList.toggle("is-active", i === index);
-      if (i === index) dot.setAttribute("aria-current", "true");
+      const active = i === index;
+      dot.classList.toggle("is-active", active);
+      if (active) dot.setAttribute("aria-current", "true");
       else dot.removeAttribute("aria-current");
     });
   }
 
   function update() {
-    const w = getSlideWidth();
+    if (!mq.matches || !slides.length) {
+      track.style.transform = "";
+      return;
+    }
+    const w = slides[0].getBoundingClientRect().width + getGap();
     track.style.transform = `translateX(${-index * w}px)`;
     btnPrev.disabled = index === 0;
     btnNext.disabled = index === slides.length - 1;
     syncDots();
   }
 
-  btnPrev.addEventListener("click", () => {
-    index = Math.max(0, index - 1);
+  function goTo(i) {
+    index = Math.max(0, Math.min(slides.length - 1, i));
     update();
-  });
+  }
 
-  btnNext.addEventListener("click", () => {
-    index = Math.min(slides.length - 1, index + 1);
-    update();
-  });
+  function mergeForMobile() {
+    const s4 = track.querySelector(".roadmap__card--s4");
+    const s5 = track.querySelector(".roadmap__card--s5");
+    if (s4 && s5) {
+      const step5 = s5.querySelector(".roadmap__step");
+      if (step5) s4.appendChild(step5);
+      s5.remove();
+    }
+  }
 
-  dots.forEach((dot, i) => {
-    dot.addEventListener("click", () => {
-      index = i;
-      update();
+  function buildDots() {
+    slides = Array.from(track.querySelectorAll(".roadmap__card"));
+    dotsRoot.innerHTML = "";
+    dots = slides.map((_, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "roadmap__dot" + (i === 0 ? " is-active" : "");
+      b.setAttribute("aria-label", `Слайд ${i + 1}`);
+      if (i === 0) b.setAttribute("aria-current", "true");
+      b.addEventListener("click", () => goTo(i));
+      dotsRoot.appendChild(b);
+      return b;
     });
-  });
+  }
 
+  function bindControls() {
+    if (bound) return;
+    bound = true;
+    btnPrev.addEventListener("click", () => goTo(index - 1));
+    btnNext.addEventListener("click", () => goTo(index + 1));
+  }
+
+  function enableMobile() {
+    track.innerHTML = originalHTML;
+    mergeForMobile();
+    buildDots();
+    bindControls();
+    index = 0;
+    update();
+  }
+
+  function disableMobile() {
+    track.innerHTML = originalHTML;
+    track.style.transform = "";
+    btnPrev.disabled = false;
+    btnNext.disabled = false;
+    slides = [];
+  }
+
+  function onChange() {
+    if (mq.matches) enableMobile();
+    else disableMobile();
+  }
+
+  onChange();
+  mq.addEventListener("change", onChange);
   window.addEventListener("resize", () => {
-    if (window.matchMedia("(max-width: 768px)").matches) update();
+    if (mq.matches) update();
   });
-
-  update();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  initRoadmapMobileSlider();
-});
+function initReveal() {
+  const items = document.querySelectorAll(".reveal");
+  if (!items.length) return;
+
+  if (!("IntersectionObserver" in window)) {
+    items.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        io.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -32px 0px" }
+  );
+
+  items.forEach((el) => io.observe(el));
+}
+
+function initSmoothAnchors() {
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const id = link.getAttribute("href");
+      if (!id || id === "#") return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.pushState(null, "", id);
+    });
+  });
+}
