@@ -1336,7 +1336,7 @@ footer .desc {
         gap: 16px;
         position: relative;
         z-index: 2;
-        margin-top: 4px;
+        margin-top: 28px;
     }
 
     .participants__scroll .btn.btn-scroll {
