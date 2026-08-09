@@ -1144,7 +1144,7 @@ footer .desc {
     .roadmap__items {
         position: relative;
         width: 100%;
-        margin-top: 100px;
+        margin-top: 120px;
         padding-top: 0;
         overflow: visible;
     }
@@ -1220,7 +1220,7 @@ footer .desc {
 
     .roadmap__image {
         position: absolute;
-        top: -118px;
+        top: -128px;
         left: 0;
         display: flex;
         justify-content: center;
