@@ -10,29 +10,36 @@ function initParticipantsCarousel() {
   if (!root) return;
 
   const track = root.querySelector(".participants__list");
+  const viewport = root.querySelector(".participants__viewport");
   const btnPrev = root.querySelector(".participants__prev");
   const btnNext = root.querySelector(".participants__next");
   const progressStrong = root.querySelector(".participants__progress strong");
-  if (!track || !btnPrev || !btnNext || !progressStrong) return;
+  if (!track || !viewport || !btnPrev || !btnNext || !progressStrong) return;
 
   const originalItems = Array.from(track.children);
   const total = originalItems.length;
   if (!total) return;
 
-  const gap = (() => {
+  const getGap = () => {
     const cs = getComputedStyle(track);
     const g = cs.gap || cs.columnGap || "0px";
     const n = parseFloat(g);
     return Number.isFinite(n) ? n : 0;
-  })();
-
-  const getCardWidth = () => {
-    const first = track.querySelector(".participants__card");
-    if (!first) return 0;
-    return first.getBoundingClientRect().width + gap;
   };
 
   const getPerView = () => (window.innerWidth >= 1024 ? 3 : 1);
+
+  const getStep = () => {
+    const per = getPerView();
+    // mobile: одна карточка на всю ширину viewport
+    if (per <= 1) {
+      return viewport.getBoundingClientRect().width || 0;
+    }
+    // desktop: фиксированная карточка + gap
+    const first = track.querySelector(".participants__card");
+    if (!first) return 0;
+    return first.getBoundingClientRect().width + getGap();
+  };
 
   let perView = getPerView();
   let cloneCount = Math.min(perView, total);
@@ -49,10 +56,10 @@ function initParticipantsCarousel() {
   }
 
   function translateToIndex(animate = true) {
-    const cw = getCardWidth();
-    if (!cw) return;
+    const step = getStep();
+    if (!step) return;
     track.style.transition = animate ? "transform 450ms ease" : "none";
-    track.style.transform = `translateX(${-index * cw}px)`;
+    track.style.transform = `translateX(${-index * step}px)`;
     setProgress();
   }
 

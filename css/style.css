@@ -543,9 +543,10 @@ main {
     column-gap: 20px;
     row-gap: 60px;
     align-items: center;
-    overflow: hidden;
+    overflow: visible;
     scroll-margin-top: 24px;
-    padding: 0 20px;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .participants__title {
@@ -620,6 +621,8 @@ main {
 .participants__viewport {
     grid-area: cards;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     overflow: hidden;
 }
 
@@ -631,6 +634,7 @@ main {
     gap: 20px;
     width: 100%;
     will-change: transform;
+    min-width: 0;
 }
 
 .participants__card {
@@ -733,7 +737,7 @@ main {
 
 footer .running_line {
     bottom: auto;
-    top: -60px;
+    top: 0;
 }
 
 .running_line__track {
@@ -803,7 +807,7 @@ footer {
     flex-direction: column;
     align-items: center;
     margin: 0 auto;
-    padding: 80px var(--pad-x) 72px;
+    padding: 100px var(--pad-x) 72px;
     width: 100%;
     background-color: var(--color-footer-background);
 }
@@ -1293,14 +1297,19 @@ footer .desc {
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        margin-bottom: 100px;
-        gap: 42px;
+        margin-bottom: 80px;
+        gap: 36px;
         max-width: 100%;
-        padding: 0 20px;
+        padding: 40px 20px 48px;
+        overflow: visible;
     }
 
     .participants__title {
+        grid-area: unset;
         width: 100%;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 2;
     }
 
     .participants__title h2 {
@@ -1310,13 +1319,24 @@ footer .desc {
     }
 
     .participants__viewport {
+        grid-area: unset;
         width: 100%;
+        position: relative;
+        z-index: 1;
+    }
+
+    .participants__list {
+        gap: 0;
     }
 
     .participants__scroll {
+        grid-area: unset;
         align-self: center;
         justify-self: auto;
         gap: 16px;
+        position: relative;
+        z-index: 2;
+        margin-top: 4px;
     }
 
     .participants__scroll .btn.btn-scroll {
@@ -1325,18 +1345,25 @@ footer .desc {
     }
 
     .participants__card {
+        box-sizing: border-box;
         width: 100%;
+        min-width: 100%;
+        max-width: 100%;
         flex: 0 0 100%;
         gap: 24px;
+        padding: 0 4px;
     }
 
     .participants__card-image {
-        width: 250px;
-        height: 250px;
+        width: min(250px, 72vw);
+        height: min(250px, 72vw);
+        flex-shrink: 0;
     }
 
     .participants__card-name {
         gap: 8px;
+        max-width: 100%;
+        padding: 0 8px;
     }
 
     .participants__card-name p {
@@ -1349,10 +1376,15 @@ footer .desc {
 
     .participants__card-content {
         gap: 24px;
+        max-width: 100%;
     }
 
     .participants__progress span {
         font-size: 16px;
+    }
+
+    footer {
+        padding: 72px 20px 60px;
     }
 }
 
